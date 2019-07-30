@@ -50,11 +50,10 @@ $(document).ready(function () {
                                     plugin: "janus.plugin.videoroom",
                                     opaqueId: opaqueId,
                                     success: function (pluginHandle) {
-                                        $('#details').remove();
                                         sfutest = pluginHandle;
                                         Janus.log("Plugin attached! (" + sfutest.getPlugin() + ", id=" + sfutest.getId() + ")");
                                         Janus.log("  -- This is a publisher/manager");
-                                        $('#publish').click(()=>askBackend().then(registerUsername));
+                                        askBackend().then(registerUsername)
                                         
                                     },
                                     error: function (error) {

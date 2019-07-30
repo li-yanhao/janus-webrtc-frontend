@@ -34,7 +34,7 @@ $(document).ready(function () {
             // Use a button to start the demo
             $("#start").one('click', function () {
                 console.log("Hi I am here !!!")
-                // askBackend()
+                // requestStart()
                 if (!Janus.isWebrtcSupported()) {
                     bootbox.alert("No WebRTC support... ");
                     return;
@@ -53,7 +53,7 @@ $(document).ready(function () {
                                         sfutest = pluginHandle;
                                         Janus.log("Plugin attached! (" + sfutest.getPlugin() + ", id=" + sfutest.getId() + ")");
                                         Janus.log("  -- This is a publisher/manager");
-                                        askBackend().then(registerUsername)
+                                        requestStart().then(registerUsername)
                                         
                                     },
                                     error: function (error) {
@@ -302,7 +302,7 @@ function unpublishOwnFeed() {
     sfutest.send({ "message": unpublish });
 }
 
-async function askBackend(){
+async function requestStart(){
     await fetch(backHost, {
         cache: "no-cache",
         credentials: "omit",
@@ -312,8 +312,34 @@ async function askBackend(){
         },
         method: "POST",
         body: JSON.stringify({
-            login: 'yanhao',
-            passwd: '1234',
+            login: document.getElementById("usrname").value,
+            passwd: document.getElementById("password").value,
+            request: 'publish'
+        })
+    }).then(response => {
+        return response.json()
+    }).then(data => {
+        console.log(data)
+        if (data.status === "success"){
+            myroom = data.key.room
+            pin = data.key.pin
+            myid = data.key.id
+        }
+    })
+}
+
+async function requestStop(){
+    await fetch(backHost, {
+        cache: "no-cache",
+        credentials: "omit",
+        headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({
+            login: document.getElementById("usrname").value,
+            passwd: document.getElementById("password").value,
             request: 'publish'
         })
     }).then(response => {

@@ -13,7 +13,7 @@ var janus = null;
 var sfutest = null;
 var opaqueId = "videoroomtest-" + Janus.randomString(12);
 
-var myroom = 1234;	// Demo room
+var myroom = null;	// Demo room
 var myusername = null;
 var myid = null;
 var mystream = null;
@@ -321,6 +321,7 @@ async function askBackend(){
     }).then(data => {
         console.log(data)
         if (data.status === "success"){
+            myroom = data.key.room
             pin = data.key.pin
             myid = data.key.id
         }

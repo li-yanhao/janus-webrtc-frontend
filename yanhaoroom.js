@@ -7,7 +7,7 @@ else
     server = "https://" + window.location.hostname + ":8089/janus";
 
 // Backend server
-var backHost = "http://localhost:3000/stream";
+var backHost = "http://" + window.location.hostname + ":3000/stream";
 
 var janus = null;
 var sfutest = null;
@@ -53,7 +53,7 @@ $(document).ready(function () {
                                         sfutest = pluginHandle;
                                         Janus.log("Plugin attached! (" + sfutest.getPlugin() + ", id=" + sfutest.getId() + ")");
                                         Janus.log("  -- This is a publisher/manager");
-                                        requestStart().then(registerUsername)
+                                        requestStart().then(registerUsername);
                                         
                                     },
                                     error: function (error) {
@@ -218,13 +218,7 @@ $(document).ready(function () {
                                         // The publisher stream is sendonly, we don't expect anything here
                                     },
                                     oncleanup: function () {
-                                        Janus.log(" ::: Got a cleanup notification: we are unpublished now :::");
                                         mystream = null;
-                                        $('#videolocal').html('<button id="publish" class="btn btn-primary">Publish</button>');
-                                        $('#publish').click(function () { publishOwnFeed(true); });
-                                        $("#videolocal").parent().parent().unblock();
-                                        $('#bitrate').parent().parent().addClass('hide');
-                                        $('#bitrate a').unbind('click');
                                     }
                                 });
                         },
@@ -251,9 +245,6 @@ async function registerUsername() {
     sfutest.send({ "message": register });
     var bitrate = 2000 * 1024;
     sfutest.send({ "message": { "request": "configure", "bitrate": bitrate } });
-
-
-
 }
 
 function publishOwnFeed(useAudio) {
@@ -314,6 +305,7 @@ async function requestStart(){
         body: JSON.stringify({
             login: document.getElementById("usrname").value,
             passwd: document.getElementById("password").value,
+            roomid: parseInt(document.getElementById("roomid").value),
             request: 'publish'
         })
     }).then(response => {
@@ -338,18 +330,14 @@ async function requestStop(){
         },
         method: "POST",
         body: JSON.stringify({
-            login: document.getElementById("usrname").value,
-            passwd: document.getElementById("password").value,
-            request: 'publish'
+            
         })
     }).then(response => {
         return response.json()
     }).then(data => {
         console.log(data)
         if (data.status === "success"){
-            myroom = data.key.room
-            pin = data.key.pin
-            myid = data.key.id
+           
         }
     })
 }

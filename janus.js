@@ -2228,7 +2228,7 @@ function Janus(gatewayCallbacks) {
 							callbacks.error('No capture device found');
 							return false;
 						} else if(!haveAudioDevice && needAudioDevice) {
-							pluginHandle.cons:qentDialog(false);
+							pluginHandle.consentDialog(false);
 							callbacks.error('Audio capture is required, but no capture device found');
 							return false;
 						} else if(!haveVideoDevice && needVideoDevice) {
